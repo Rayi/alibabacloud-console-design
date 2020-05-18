@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import NavContent from './NavContent'
 import { Select } from '@alicloud/console-components'
 import Page from '@alicloud/console-components-page'
+import { WindProContext } from '@alicloud/xconsole-context';
 import { Link } from 'dva/router';
 import './index.less'
 
@@ -18,6 +19,9 @@ const PageHeader = ({
   children,
   ...restProps
 }) => {
+  const { history: _history} = useContext(WindProContext);
+
+  const __history = _history || history;
 
   const breadcrumbItems = breadcrumbs.map(({title, text, to, ...restProps}) => (
     <Page.Breadcrumb.Item key="home">
@@ -45,8 +49,10 @@ const PageHeader = ({
         ) : subTitle}
         hasBackArrow={!!historyBack}
         onBackArrowClick={() => {
-          if (history) {
-            history.push(historyBack)
+          if (__history) {
+            __history.push(historyBack)
+          } else {
+            document.location = historyBack;
           }
         }}
       />
